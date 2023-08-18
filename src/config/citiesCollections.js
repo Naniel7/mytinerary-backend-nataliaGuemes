@@ -1,4 +1,4 @@
-/*const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 require('./db') 
 
 const City = require("../models/City")
@@ -66,10 +66,26 @@ const cities = [
     }
 ]
 
+const insertCities = async (req, res) => {
+    try {
+      
+      await City.insertMany(cities);
+  
+      res.status(200).json({ message: "Collection has been added" });
+    } catch (e) {
+      res.status(400).json({ message: e.message });
+    }
+  };
+  
+  module.exports = insertCities;
+
+/*
 City.insertMany(cities)
   .then(() => {
     console.log("cities loading")
   })
   .catch((error) => {
-    console.error("error loading cities", error)
-  });*/
+    console.error("error loading cities", error.message)
+  }); /*/
+
+

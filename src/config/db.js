@@ -9,6 +9,6 @@ connect(URI)
     .then(() => {
         console.log("Database connection succeful")
     })
-    .catch(() => {
-        console.log("Error connecting database")
+    .catch((error) => {
+        console.log("Error connecting database", error)
     })

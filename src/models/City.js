@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, Types } = require("mongoose");
 
 let collection = "City"
 const schemaCity = new Schema({
@@ -13,7 +13,11 @@ const schemaCity = new Schema({
     image: {
         type: String,
         required: true,
-    }
+    },
+    /*accounts: [{
+        type: Types.ObjectId,
+        ref: "Account"
+    }]*/
 })
 
 const City = model("City", schemaCity)
