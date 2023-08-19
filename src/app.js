@@ -1,7 +1,7 @@
 const express = require("express")
 const router = require("./router/router")
 const connectDB = require("./config/db")
-require('dotenv').config();3
+
 
 const app = express()
 

@@ -7,7 +7,7 @@ const addAccount = require("../controllers/accountController");
 
 router.get("/cities", getCities)
 router.get("/cities/:id", getCity)
-router.post("/cities",verifyDataCity, addCity)
+router.post("/cities", addCity)
 router.delete("/cities", deleteCity)
 //router.post("/accounts",addAccount)
 

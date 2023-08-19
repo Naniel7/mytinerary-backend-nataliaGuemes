@@ -1,6 +1,5 @@
-const { Schema, model, Types } = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-let collection = "City"
 const schemaCity = new Schema({
     place: {
         type: String,
@@ -13,13 +12,15 @@ const schemaCity = new Schema({
     image: {
         type: String,
         required: true,
-    },
-    /*accounts: [{
+    }
+    /*
+    accounts: [{
         type: Types.ObjectId,
         ref: "Account"
-    }]*/
-})
+    }]
+    */
+});
 
-const City = model("City", schemaCity)
+const City = model("City", schemaCity);
 
-module.exports = City
+module.exports = City;
