@@ -4,12 +4,10 @@ const { getCities, getCity, addCity, deleteCity } = require('../controllers/citi
 const { verifyDataCity } = require('../middlewares/verifications');
 const addAccount = require("../controllers/accountController");
 
-
 router.get("/cities", getCities)
 router.get("/cities/:id", getCity)
 router.post("/cities", addCity)
 router.delete("/cities", deleteCity)
-//router.post("/accounts",addAccount)
 
 
 module.exports = router
