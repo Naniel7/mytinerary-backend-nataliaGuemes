@@ -16,7 +16,7 @@ const getItineraries = async (req, res) => {
 const getItinerariesByCity = async (req, res) => {
     const cityId = req.params.cityId;
     try {
-        const itineraries = await Itinerary.find({ city: cityId });
+        const itineraries = await Itinerary.find({ id: cityId });
         res.json(itineraries);
     } catch (error) {
         res.status(500).json({ error: "Error to get al  the itineraries of an city" });
