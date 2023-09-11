@@ -23,21 +23,15 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const { password, email } = req.body
-        const userFounded = await User.findOne({ email: email })
-        if (userFounded) {
-            if (verifyPassword(password, userFounded.password)) {
-                return res.status(200).json({ message: "Sucessfuly logged in" })
-            } else {
-                return res.status(200).json({ message: "Wrong password" })
-            }
-
+        res.status(200).json({
+            message: "Succesfully logged in",
+            token: req.token,
+            user:{
+            email:req.user.email,
+            id: req.user._id
         }
-        else {
-            res.status(400).json("User not founded");
-        }
-
-
+        
+        })
     } catch (e) {
         res.status(400).json({ message: e.message })
     }
