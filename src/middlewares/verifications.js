@@ -61,8 +61,7 @@ const verifyAuthData = (req, res, next) => {
         return res.status(400).json({ message: userValidated.error.details.map((err) => err.message) })
     }
     next()
-}
-
+} 
 module.exports = {
     verifyDataClient,
     verifyAuthData,
