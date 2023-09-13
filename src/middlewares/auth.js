@@ -1,6 +1,29 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
+const { Strategy, ExtractJwt } = require("passport-jwt");
+
+const passportVerificator = passport.use(
+  new Strategy(
+    {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: "secretKey",
+    },
+    async (payload, done) => {
+      try {
+        let userFounded = await User.findOne({ email: payload.email });
+        if (userFounded) {
+          return done(null, userFounded);
+        } else {
+          return done(null);
+        }
+      } catch (error) {
+        return done(error);
+      }
+    }
+  )
+);
 
 const hashPassword = (req, res, next) => {
   try {
@@ -16,7 +39,6 @@ const hashPassword = (req, res, next) => {
 const verifyPassword = (req, res, next) => {
   const passwordPlain = req.body.password;
   const hashPassword = req.user.password;
-
   const isValid = bcrypt.compareSync(passwordPlain, hashPassword);
   if (isValid) {
     next();
@@ -37,21 +59,23 @@ const verifyUserExist = async (req, res, next) => {
   }
 };
 
-const generateToken = (req, res, next) =>{
-    try {
-        let secretKay= "secretKey"
-        let token = jwt.sign ({email:req.body.email}, secretKay, {expiresIn: 60*3})
-        req.token = token
-        next()
-
-    } catch (error) {
-        res.status(500).json({message: error.message})
-    }
-}
+const generateToken = (req, res, next) => {
+  try {
+    let secretKay = "secretKey";
+    let token = jwt.sign({ email: req.user.email }, secretKay, {
+      expiresIn: 60 * 3,
+    });
+    req.token = token;
+    next();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 module.exports = {
   hashPassword,
   verifyPassword,
   verifyUserExist,
-  generateToken
-}
+  generateToken,
+  passportVerificator,
+};
