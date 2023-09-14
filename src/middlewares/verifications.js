@@ -8,7 +8,7 @@ const userSchema = Joi.object({
         'string.empty': "Please enter your name",
         'any.required': "Please enter your name ",
     }),
-    lastName: Joi.string().min(2).max(36).optional().messages({
+    lastname: Joi.string().min(2).max(36).optional().messages({
         'string.min': "Last name must be at least 2 characters",
         'string.max': "Last name must be at most 50 characters",
         'string.empty': "Please enter your last name",
@@ -38,17 +38,17 @@ const userSchema = Joi.object({
 
 
 const verifyDataClient = (req, res, next) => {
-    let { name, lastName, age } = req.body
+    let { name, lastname, age } = req.body
     if (name == "") {
         return res.status(400).json({ message: "Invalid name" })
     }
-    if (lastName == "") {
+    if (lastname == "") {
         return res.status(400).json({ message: "Invalid last name" })
     }
     if (age == "") {
         return res.status(400).json({ message: "Invalid age" })
     }
-    if (!name || !lastName || !age)
+    if (!name || !lastname || !age)
         return res.status(400).json({ message: "Invalid data" })
     next()
 }

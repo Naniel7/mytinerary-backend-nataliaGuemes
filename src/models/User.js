@@ -23,7 +23,6 @@ const schemaUser = new Schema({
     },
     country: {
         type: String,
-        require: true,
     }
 })
 
