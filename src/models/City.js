@@ -1,3 +1,4 @@
+const { string } = require("joi");
 const { Schema, model } = require("mongoose");
 
 const schemaCity = new Schema({
@@ -12,6 +13,9 @@ const schemaCity = new Schema({
     image: {
         type: String,
         required: true,
+    },
+    info:{
+        type: String
     }
     /*
     accounts: [{
