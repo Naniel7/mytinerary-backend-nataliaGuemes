@@ -1,17 +1,23 @@
-const express = require("express")
-const router = require("./router/router")
-const connectDB = require("./config/db")
-const cors = require('cors');
+const express = require("express");
+const router = require("./router/router");
+const connectDB = require("./config/db");
+const cors = require("cors");
 
-const app = express()
+// Conectar a la base de datos
+connectDB();
 
-app.use(express.json())
+const app = express();
 
+// Middleware
+app.use(express.json());
 app.use(cors());
-app.use("/api", router)
 
+// Rutas
+app.use("/api", router);
 
+// Puerto dinámico
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log(`Server working on port ${PORT}`);
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
