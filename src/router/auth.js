@@ -1,12 +1,39 @@
-const express = require("express")
-const { register, login, authenticated } = require("../controllers/authController")
-const { verifyAuthData } = require("../middlewares/verifications")
-const { hashPassword, verifyUserExist, verifyPassword, generateToken, passportVerificator } = require("../middlewares/auth")
+const express = require("express");
+const { register, login, authenticated } = require("../controllers/authController");
+const { verifyAuthData } = require("../middlewares/verifications");
+const { 
+  hashPassword, 
+  verifyUserExist, 
+  verifyPassword, 
+  generateToken, 
+  passportVerificator 
+} = require("../middlewares/auth");
 
-const authRouter = express.Router()
+const roleMiddleware = require("../middlewares/roleMiddleware"); // Middleware de roles
 
-authRouter.post('/register', verifyAuthData, hashPassword, register)
-authRouter.post('/login', verifyAuthData, verifyUserExist, verifyPassword,generateToken, login)
-authRouter.post('/authenticated', passportVerificator.authenticate("jwt", {session: false}), generateToken, authenticated)
+const authRouter = express.Router();
 
-module.exports = authRouter 
+// Registro
+authRouter.post('/register', verifyAuthData, hashPassword, register);
+
+// Login
+authRouter.post('/login', verifyAuthData, verifyUserExist, verifyPassword, generateToken, login);
+
+// Verificar si el usuario está autenticado
+authRouter.get(
+  '/authenticated', 
+  passportVerificator.authenticate("jwt", { session: false }), 
+  authenticated
+);
+
+// Ejemplo de ruta protegida por rol
+authRouter.post(
+  '/admin-action', 
+  passportVerificator.authenticate("jwt", { session: false }), 
+  roleMiddleware('admin'), 
+  (req, res) => {
+    res.json({ message: "Acción permitida solo para administradores" });
+  }
+);
+
+module.exports = authRouter;

@@ -23,9 +23,14 @@ const schemaUser = new Schema({
     },
     country: {
         type: String,
-    }
-})
+    },
+    role: {
+        type: String,
+        default: 'user', // Rol por defecto
+        enum: ['user', 'admin'], // Roles permitidos
+    },
+});
 
-const User = model("User", schemaUser)
+const User = model("User", schemaUser);
 
-module.exports = User
+module.exports = User;

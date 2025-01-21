@@ -1,5 +1,6 @@
 const Joi = require('joi')
 
+
 const userSchema = Joi.object({
  
     name: Joi.string().min(2).max(50).optional().messages({
@@ -34,6 +35,10 @@ const userSchema = Joi.object({
         'string.min': "Country must be at least 2 characters",
         'string.max': "Country must be at most 50 characters",
     }),
+    role: Joi.string().valid("admin", "user").required().messages({
+        "any.only": "Role must be either 'admin' or 'user'",
+        "any.required": "Role is required"
+      })
 });
 
 
