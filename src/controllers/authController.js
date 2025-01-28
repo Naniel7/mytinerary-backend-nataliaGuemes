@@ -1,4 +1,4 @@
-const { hashPassword, verifyPassword } = require('../middlewares/auth');
+const { hashPassword } = require('../middlewares/auth');
 const User = require('../models/User');
 
 // Registro de usuario
@@ -8,22 +8,26 @@ const register = async (req, res) => {
 
         // Verifica si el usuario ya existe
         const userExist = await User.findOne({ email: payload.email });
-
         if (userExist) {
             return res.status(403).json({ message: "User already exists" });
         }
 
-        // Crea un nuevo usuario con el rol 'user' por defecto
-        const userCreated = await User.create({
-            ...payload,
-            role: 'user', // Asigna el rol 'user' automáticamente
-        });
+        // Hashea la contraseña antes de crear el usuario
+        hashPassword(req, res, async () => {
+            const userCreated = await User.create({
+                ...payload,
+                role: 'user', // Asigna el rol 'user' automáticamente
+            });
 
-        return res.status(200).json({
-            message: "User created successfully",
-            userCreated
+            return res.status(200).json({
+                message: "User created successfully",
+                user: {
+                    email: userCreated.email,
+                    id: userCreated._id,
+                    role: userCreated.role,
+                },
+            });
         });
-
     } catch (e) {
         res.status(400).json({ message: e.message });
     }
@@ -38,8 +42,8 @@ const login = async (req, res) => {
             user: {
                 email: req.user.email,
                 id: req.user._id,
-                role: req.user.role, // Devuelve también el rol del usuario
-            }
+                role: req.user.role,
+            },
         });
     } catch (e) {
         res.status(400).json({ message: e.message });
@@ -55,8 +59,8 @@ const authenticated = async (req, res) => {
             user: {
                 email: req.user.email,
                 id: req.user._id,
-                role: req.user.role, // Devuelve también el rol del usuario
-            }
+                role: req.user.role,
+            },
         });
     } catch (e) {
         res.status(400).json({ message: e.message });
@@ -68,26 +72,20 @@ const assignAdminRole = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Solo un administrador puede asignar el rol 'admin'
         const user = await User.findById(id);
-
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        if (user.role === 'admin') {
-            return res.status(400).json({ message: "User is already an admin" });
-        }
-
-        user.role = 'admin'; // Asigna el rol 'admin'
+        user.role = 'admin';
         await user.save();
 
         res.status(200).json({
-            message: "User has been successfully promoted to admin",
-            user
+            message: "User promoted to admin successfully",
+            user,
         });
-    } catch (e) {
-        res.status(400).json({ message: e.message });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 };
 
