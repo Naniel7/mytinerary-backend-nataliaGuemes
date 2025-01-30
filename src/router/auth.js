@@ -6,7 +6,7 @@ const {
   verifyUserExist, 
   verifyPassword, 
   generateToken, 
-  passportVerificator 
+  authMiddleware 
 } = require("../middlewares/auth");
 
 const roleMiddleware = require("../middlewares/roleMiddleware"); // Middleware de roles
@@ -20,16 +20,12 @@ authRouter.post('/register', verifyAuthData, hashPassword, register);
 authRouter.post('/login', verifyAuthData, verifyUserExist, verifyPassword, generateToken, login);
 
 // Verificar si el usuario está autenticado
-authRouter.get(
-  '/authenticated', 
-  passportVerificator.authenticate("jwt", { session: false }), 
-  authenticated
-);
+authRouter.get('/authenticated', authMiddleware, authenticated);
 
 // Ejemplo de ruta protegida por rol
 authRouter.post(
   '/admin-action', 
-  passportVerificator.authenticate("jwt", { session: false }), 
+  authMiddleware, 
   roleMiddleware('admin'), 
   (req, res) => {
     res.json({ message: "Acción permitida solo para administradores" });
