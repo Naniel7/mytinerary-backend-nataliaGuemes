@@ -10,10 +10,19 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 // Rutas
 app.use("/api", router);
+
+// Ruta para verificar autenticación del usuario
+app.get("/api/auth/me", (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ error: "No autorizado" });
+  }
+  res.json({ message: "Usuario autenticado correctamente" });
+});
 
 // Manejo de errores
 app.use((req, res, next) => {
